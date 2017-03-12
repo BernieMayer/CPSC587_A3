@@ -23,6 +23,8 @@ SceneShader::SceneShader(): Shader()
 	_yRot = 0.0;
 	lightPosition = glm::vec3(0.5, 0.5, 0.5);
 
+	springScene = new MassSpringScene();
+
 }
 
 
@@ -70,7 +72,11 @@ void SceneShader::createVertexBuffer()
 	glBindVertexArray(0);
 
 	//read and create mesh geometry
-	readMesh("./models/bunny.ply"); //normalized vertices coordinates
+	readMesh("./models/cube.obj");
+	model_scale = 0.2;
+	model_y_position = 0.2;
+
+	model_pos = glm::vec3(0, model_y_position, 0);
 
 	//triangle mesh
 	glGenVertexArrays(1, &_meshVertexArray);
@@ -83,6 +89,7 @@ void SceneShader::createVertexBuffer()
 	glEnableVertexAttribArray(0);
 	
 	//TODO normals
+
 
         glGenBuffers(1, &_meshNormalBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, _meshNormalBuffer);
@@ -168,6 +175,10 @@ void SceneShader::renderMesh()
 	glUniformMatrix4fv(glGetUniformLocation(_programMesh, "modelview"), 1, GL_FALSE, glm::value_ptr(_modelview));
 	glUniformMatrix4fv(glGetUniformLocation(_programMesh, "projection"), 1, GL_FALSE, glm::value_ptr(_projection));
 
+	glUniform1f(glGetUniformLocation(_programMesh, "model_scale"), model_scale);
+	//glUniform1f(glGetUniformLocation(_programMesh, "model_y_position"), model_y_position);
+	glUniform3fv(glGetUniformLocation(_programMesh, "model_position"), 1, glm::value_ptr(model_pos));
+
 	glUniform3fv(glGetUniformLocation(_programMesh, "lightPosition"), 1, glm::value_ptr(lightPosition) );
 
 	glDrawElements( GL_TRIANGLES, _mesh->faces.size()*3, GL_UNSIGNED_INT, 0 );
@@ -175,6 +186,18 @@ void SceneShader::renderMesh()
 	glBindVertexArray(0);
 }
 
+
+void SceneShader::renderLines()
+{
+
+	glLineWidth(2.5);
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_LINES);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(15, 0, 0);
+	glEnd();
+
+}
 
 void SceneShader::renderLight()
 {
@@ -210,6 +233,7 @@ void SceneShader::render()
 {
 	renderPlane();
 	renderMesh();
+	//renderLines();
 	renderLight();
 }
 

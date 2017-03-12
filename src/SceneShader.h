@@ -14,9 +14,12 @@
 #define GLM_FORCE_RADIANS
 
 #include "TriMesh.h"
+#include "MassSpringScene.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+
 
 class SceneShader : public Shader
 {
@@ -32,6 +35,8 @@ public:
 	void renderPlane();
 	void renderMesh();
 	void renderLight();
+	void renderLines();
+
 
 	void setAspectRatio( float ratio );
 	void setZTranslation(float z);
@@ -73,6 +78,13 @@ private:
 	float _xRot;
 	float _yRot;
 	float _aspectRatio;
+
+	float model_scale;
+	float model_y_position;
+
+	glm::vec3 model_pos;
+	MassSpringScene* springScene;
+
 
 
 	trimesh::TriMesh* _mesh;
