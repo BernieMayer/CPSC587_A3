@@ -17,7 +17,7 @@ MassSpringScene::MassSpringScene() {
 
 MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation)
 {
-	massA = new PhysicsMass(massLocation, 2.0f);
+	massA = new PhysicsMass(massLocation, 5.0f);
 	massB = new PhysicsMass(springLocation, 2.0f);
 
 	massB->isFixed = true;
@@ -26,11 +26,11 @@ MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation)
 
 	vec3 vecBetweenSpringAndMass = springLocation - massLocation;
 
-	double x_r = length( springLocation + 0.5f * vecBetweenSpringAndMass);
+	double x_r = length( springLocation + 0.2f * vecBetweenSpringAndMass);
 
 	double x_c = length(massLocation - springLocation);
 
-	spring = new PhysicsSpring(springLocation, 1000.0f, x_r, x_c, massA, massB);
+	spring = new PhysicsSpring(springLocation, 500.0f, x_r, x_c, massA, massB);
 
 	v_t = vec3(0,0,0);
 
@@ -59,20 +59,14 @@ glm::vec3 MassSpringScene::getLocationOfSpring()
 }
 
 
-//Not actually functional currently
+//Now is functional
 void MassSpringScene::applyTimeStep(double deltaTime)
 {
-	vec3 massLocation =  massA->getPostion();
-	vec3 springLocation = spring->getPostion();
-
-	double k  = spring->k;
-//	/double mass = mass->getMass();
-
-	double x_r = spring->x_r;
 
 
 
-	double gravity = -9.81f;
+	float gravity = -9.8196f;
+	float dampeningFactor = 0.5f;
 
 	//zero out all the forces on the masses
 		for (PhysicsMass* mass:masses)
@@ -84,12 +78,12 @@ void MassSpringScene::applyTimeStep(double deltaTime)
 		{
 			//apply gravity
 
-			mass->applyForce(vec3(0, -9.81, 0));
+			mass->applyForce(mass->getMass() * vec3(0, gravity, 0));
 
 
 			//apply damping
 
-			vec3 dampeningForce = - 0.5f * mass->getVelocity();
+			vec3 dampeningForce = - dampeningFactor * mass->getVelocity();
 			mass->applyForce(dampeningForce);
 
 
@@ -103,6 +97,8 @@ void MassSpringScene::applyTimeStep(double deltaTime)
 			s->applyForce();
 		}
 
+
+		//Change the velocites and the positions of the masses
 		for (PhysicsMass* mass:masses)
 		{
 			mass->resolveForces((float) deltaTime);

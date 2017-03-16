@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/MassSpringScene.cpp \
+../src/PendulumScene.cpp \
 ../src/PhysicsMass.cpp \
 ../src/PhysicsObject.cpp \
 ../src/PhysicsSpring.cpp \
@@ -15,6 +16,7 @@ CPP_SRCS += \
 
 OBJS += \
 ./src/MassSpringScene.o \
+./src/PendulumScene.o \
 ./src/PhysicsMass.o \
 ./src/PhysicsObject.o \
 ./src/PhysicsSpring.o \
@@ -25,6 +27,7 @@ OBJS += \
 
 CPP_DEPS += \
 ./src/MassSpringScene.d \
+./src/PendulumScene.d \
 ./src/PhysicsMass.d \
 ./src/PhysicsObject.d \
 ./src/PhysicsSpring.d \

@@ -28,9 +28,9 @@ SceneShader::SceneShader(): Shader()
 	springScene = new MassSpringScene(glm::vec3(0.0, 0.2, 0), glm::vec3(0, 0.5, 0.0));
 
 	springLine.push_back(glm::vec3(0, 0.2, 0));
-	springLine.push_back(glm::vec3(0, 1.0, 0.0));
+	springLine.push_back(glm::vec3(0, 0.8, 0.0));
 
-	pointLocation = glm::vec3(0.0, 1.0, 0.0);
+	pointLocation = glm::vec3(0.0, 0.8, 0.0);
 
 
 	springColors.push_back(glm::vec3(1.0,0.0,0));
@@ -86,7 +86,7 @@ void SceneShader::createVertexBuffer()
 
 	//read and create mesh geometry
 	readMesh("./models/cube.obj");
-	model_scale = 0.2;
+	model_scale = 0.05;
 	model_y_position = 0.2;
 
 	model_pos = glm::vec3(0, model_y_position, 0);
@@ -194,7 +194,7 @@ void SceneShader::renderMesh()
 
 	glUseProgram(_programMesh);
 
-	springScene->applyTimeStep(0.001f);
+	springScene->applyTimeStep(0.0025f);
 
 	meshLocation = springScene->getLocationOfMass();
 
