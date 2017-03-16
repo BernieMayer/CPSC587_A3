@@ -8,10 +8,10 @@
 #ifndef MASSSPRINGSCENE_H_
 #define MASSSPRINGSCENE_H_
 
-#include "PhysicsBox.h"
 #include "PhysicsSpring.h"
 #include "PhysicsObject.h"
 #include <glm/glm.hpp>
+#include "PhysicsMass.h"
 
 using namespace glm;
 
@@ -30,7 +30,11 @@ public:
 
 
 private:
-	PhysicsBox* mass;
+	PhysicsMass* massA;
+	PhysicsMass* massB;
+
+	vector<PhysicsMass*> masses;
+	vector<PhysicsSpring*> springs;
 	PhysicsSpring* spring;
 };
 

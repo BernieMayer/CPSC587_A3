@@ -23,7 +23,9 @@ SceneShader::SceneShader(): Shader()
 	_yRot = 0.0;
 	lightPosition = glm::vec3(0.5, 0.5, 0.5);
 
-	springScene = new MassSpringScene();
+
+
+	springScene = new MassSpringScene(glm::vec3(0, 0.2, 0), glm::vec3(0, -0.6, 0.0));
 
 }
 
@@ -156,6 +158,11 @@ void SceneShader::renderMesh()
 
 	glUseProgram(_programMesh);
 
+	springScene->applyTimeStep(0.001f);
+
+	glm::vec3 meshLocation = springScene->getLocationOfMass();
+
+
 	//scene matrices and camera setup
 	glm::vec3 eye(0.0f, 0.3f, 2.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
@@ -177,7 +184,7 @@ void SceneShader::renderMesh()
 
 	glUniform1f(glGetUniformLocation(_programMesh, "model_scale"), model_scale);
 	//glUniform1f(glGetUniformLocation(_programMesh, "model_y_position"), model_y_position);
-	glUniform3fv(glGetUniformLocation(_programMesh, "model_position"), 1, glm::value_ptr(model_pos));
+	glUniform3fv(glGetUniformLocation(_programMesh, "model_position"), 1, glm::value_ptr(meshLocation));
 
 	glUniform3fv(glGetUniformLocation(_programMesh, "lightPosition"), 1, glm::value_ptr(lightPosition) );
 

@@ -5,8 +5,8 @@ src/SceneShader.o: ../src/SceneShader.cpp ../src/SceneShader.h \
  /home/ugd/bemayer/CPSC587/A3/libraries/trimesh/include/Box.h \
  /home/ugd/bemayer/CPSC587/A3/libraries/trimesh/include/strutil.h \
  /home/ugd/bemayer/CPSC587/A3/libraries/trimesh/include/Color.h \
- ../src/MassSpringScene.h ../src/PhysicsBox.h ../src/PhysicsObject.h \
- ../src/PhysicsSpring.h
+ ../src/MassSpringScene.h ../src/PhysicsSpring.h ../src/PhysicsObject.h \
+ ../src/PhysicsMass.h
 
 ../src/SceneShader.h:
 
@@ -24,8 +24,8 @@ src/SceneShader.o: ../src/SceneShader.cpp ../src/SceneShader.h \
 
 ../src/MassSpringScene.h:
 
-../src/PhysicsBox.h:
+../src/PhysicsSpring.h:
 
 ../src/PhysicsObject.h:
 
-../src/PhysicsSpring.h:
+../src/PhysicsMass.h:

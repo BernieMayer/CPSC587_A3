@@ -1,11 +1,11 @@
 src/MassSpringScene.o: ../src/MassSpringScene.cpp \
- ../src/MassSpringScene.h ../src/PhysicsBox.h ../src/PhysicsObject.h \
- ../src/PhysicsSpring.h
+ ../src/MassSpringScene.h ../src/PhysicsSpring.h ../src/PhysicsObject.h \
+ ../src/PhysicsMass.h
 
 ../src/MassSpringScene.h:
 
-../src/PhysicsBox.h:
+../src/PhysicsSpring.h:
 
 ../src/PhysicsObject.h:
 
-../src/PhysicsSpring.h:
+../src/PhysicsMass.h:
