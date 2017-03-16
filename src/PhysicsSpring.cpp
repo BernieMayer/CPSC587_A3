@@ -41,6 +41,7 @@ PhysicsSpring::PhysicsSpring(glm::vec3 argPos,
 }
 
 
+
 void PhysicsSpring::applyForce()
 {
 	vec3 locA = massA->getPostion();

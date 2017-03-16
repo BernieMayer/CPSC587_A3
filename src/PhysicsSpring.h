@@ -31,6 +31,9 @@ public:
 
 	void applyForce();
 
+	vec3 getMassA_Location();
+	vec3 getMassB_Location();
+
 private:
 
 };
