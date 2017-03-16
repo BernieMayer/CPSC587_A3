@@ -87,6 +87,9 @@ private:
 	float model_scale;
 	float model_y_position;
 
+
+	glm::vec3 meshLocation;
+	glm::vec3 pointLocation;
 	glm::vec3 model_pos;
 	MassSpringScene* springScene;
 

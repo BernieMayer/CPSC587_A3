@@ -6,14 +6,19 @@
 // ==========================================================================
 #version 410
 
-// interpolated colour received from vertex stage
+// location indices for these attributes correspond to those specified in the
+// InitializeGeometry() function of the main program
+layout(location = 0) in vec3 VertexPosition;
+layout(location = 1) in vec3 VertexNormal;
 
-// first output is mapped to the framebuffer's colour index by default
-out vec4 FragmentColour;
+uniform mat4 perspectiveMatrix;
+uniform mat4 modelviewMatrix ;
+// output to be interpolated between vertices and passed to the fragment stage
 
-in vec3 FragNormal;
+out vec3 FragNormal;
 
-void main(void)
+void main()
 {
-	FragmentColour = vec4(FragNormal, 1.0);
+	FragNormal = VertexNormal;
+	gl_Position = perspectiveMatrix*modelviewMatrix*vec4(VertexPosition, 1.0);
 }

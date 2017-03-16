@@ -25,13 +25,16 @@ SceneShader::SceneShader(): Shader()
 
 
 
-	springScene = new MassSpringScene(glm::vec3(0, 0.2, 0), glm::vec3(0, 0.5, 0.0));
+	springScene = new MassSpringScene(glm::vec3(0.0, 0.2, 0), glm::vec3(0, 0.5, 0.0));
 
 	springLine.push_back(glm::vec3(0, 0.2, 0));
-	springLine.push_back(glm::vec3(0, 0.5, 0.0));
+	springLine.push_back(glm::vec3(0, 1.0, 0.0));
 
-	springColors.push_back(glm::vec3(1,0,0));
-	springColors.push_back(glm::vec3(1,0,0));
+	pointLocation = glm::vec3(0.0, 1.0, 0.0);
+
+
+	springColors.push_back(glm::vec3(1.0,0.0,0));
+	springColors.push_back(glm::vec3(1.0,0.0,0));
 
 }
 
@@ -88,6 +91,7 @@ void SceneShader::createVertexBuffer()
 
 	model_pos = glm::vec3(0, model_y_position, 0);
 
+
 	//triangle mesh
 	glGenVertexArrays(1, &_meshVertexArray);
 	glBindVertexArray(_meshVertexArray);
@@ -112,11 +116,29 @@ void SceneShader::createVertexBuffer()
 
 
 
+
+
 	glGenBuffers(1, &_meshIndicesBuffer );
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _meshIndicesBuffer );
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _triangleIndices.size()*sizeof(unsigned int), _triangleIndices.data(), GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+
+	 glGenVertexArrays(1, &_linesVertexArray);
+	    glBindVertexArray(_linesVertexArray);
+
+
+	    glGenBuffers(1, &_linesVertexBuffer);
+	    glBindBuffer(GL_ARRAY_BUFFER, _linesVertexBuffer);
+	    glBufferData(GL_ARRAY_BUFFER, springLine.size() * sizeof(glm::vec3), springLine.data(), GL_STATIC_DRAW);
+	    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	    glEnableVertexAttribArray(0);
+
+	    glGenBuffers(1, &_linesColorBuffer);
+	    glBindBuffer(GL_ARRAY_BUFFER, _linesColorBuffer);
+	    glBufferData(GL_ARRAY_BUFFER, springColors.size() * sizeof(glm::vec3), springColors.data(), GL_STATIC_DRAW);
+	    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	    glEnableVertexAttribArray(1);
 
 }
 
@@ -128,6 +150,8 @@ void SceneShader::startup()
 	_programMesh = compile_shaders("./shaders/mesh.vert", "./shaders/mesh.frag");
 
 	_programLight = compile_shaders("./shaders/light.vert", "./shaders/light.frag");
+
+	_programBasic = compile_shaders("./shaders/simple.vert", "./shaders/simple.frag");
 
 	createVertexBuffer();
 
@@ -172,7 +196,7 @@ void SceneShader::renderMesh()
 
 	springScene->applyTimeStep(0.001f);
 
-	glm::vec3 meshLocation = springScene->getLocationOfMass();
+	meshLocation = springScene->getLocationOfMass();
 
 
 	//scene matrices and camera setup
@@ -211,6 +235,46 @@ void SceneShader::renderLines()
 
 	//change this to be a line between the top of the spring location and the bottom
 	//spring
+
+
+	glBindVertexArray(_linesVertexArray);
+	glUseProgram(_programBasic);
+
+
+	//scene matrices and camera setup
+	glm::vec3 eye(0.0f, 0.3f, 2.0f);
+	glm::vec3 up(0.0f, 1.0f, 0.0f);
+	glm::vec3 center(0.0f, 0.0f, 0.0f);
+
+	_modelview = glm::lookAt( eye, center, up);
+
+	_projection = glm::perspective( 45.0f, _aspectRatio, 0.01f, 100.0f);
+
+	glm::mat4 identity(1.0f);
+
+	glm::mat4 rotationX = glm::rotate(identity, _yRot  * PI/180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    _modelview *=  rotationX;
+
+	//uniform variables
+	glUniformMatrix4fv(glGetUniformLocation(_programBasic, "modelviewMatrix"), 1, GL_FALSE, glm::value_ptr(_modelview));
+	glUniformMatrix4fv(glGetUniformLocation(_programBasic, "perspectiveMatrix"), 1, GL_FALSE, glm::value_ptr(_projection));
+
+
+	springLine.clear();
+
+	springLine.push_back(meshLocation);
+	springLine.push_back(pointLocation);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _linesVertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER,  springLine.size() * sizeof (glm::vec3), springLine.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _linesColorBuffer);
+	glBufferData(GL_ARRAY_BUFFER,  springColors.size() * sizeof (glm::vec3), springColors.data(), GL_STATIC_DRAW);
+
+	glDrawArrays(GL_LINES, 0, springLine.size());
+
+	glBindVertexArray(0);
 
 
 

@@ -30,7 +30,7 @@ MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation)
 
 	double x_c = length(massLocation - springLocation);
 
-	spring = new PhysicsSpring(springLocation, 100.0f, x_r, x_c, massA, massB);
+	spring = new PhysicsSpring(springLocation, 1000.0f, x_r, x_c, massA, massB);
 
 	v_t = vec3(0,0,0);
 
@@ -88,6 +88,12 @@ void MassSpringScene::applyTimeStep(double deltaTime)
 
 
 			//apply damping
+
+			vec3 dampeningForce = - 0.5f * mass->getVelocity();
+			mass->applyForce(dampeningForce);
+
+
+
 		}
 
 		//iterate through springs applying
