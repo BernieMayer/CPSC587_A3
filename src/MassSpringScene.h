@@ -24,6 +24,7 @@ public:
 
 	void applyTimeStep(double delta_time);
 	glm::vec3 getLocationOfMass();
+	glm::vec3 getLocationOfSpring();
 
 	vec3 v_t;
 

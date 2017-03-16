@@ -17,10 +17,10 @@ MassSpringScene::MassSpringScene() {
 
 MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation)
 {
-	massA = new PhysicsMass(massLocation, 1.0f);
-	massB = new PhysicsMass(springLocation, 1.0f);
+	massA = new PhysicsMass(massLocation, 2.0f);
+	massB = new PhysicsMass(springLocation, 2.0f);
 
-	massB->isFixed = false;
+	massB->isFixed = true;
 
 
 
@@ -30,7 +30,7 @@ MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation)
 
 	double x_c = length(massLocation - springLocation);
 
-	spring = new PhysicsSpring(springLocation, 1.0f, x_r, x_c, massA, massB);
+	spring = new PhysicsSpring(springLocation, 100.0f, x_r, x_c, massA, massB);
 
 	v_t = vec3(0,0,0);
 
@@ -51,6 +51,11 @@ MassSpringScene::~MassSpringScene() {
 glm::vec3 MassSpringScene::getLocationOfMass()
 {
 	return massA->getPostion();
+}
+
+glm::vec3 MassSpringScene::getLocationOfSpring()
+{
+	return massB->getPostion();
 }
 
 

@@ -25,7 +25,13 @@ SceneShader::SceneShader(): Shader()
 
 
 
-	springScene = new MassSpringScene(glm::vec3(0, 0.2, 0), glm::vec3(0, -0.6, 0.0));
+	springScene = new MassSpringScene(glm::vec3(0, 0.2, 0), glm::vec3(0, 0.5, 0.0));
+
+	springLine.push_back(glm::vec3(0, 0.2, 0));
+	springLine.push_back(glm::vec3(0, 0.5, 0.0));
+
+	springColors.push_back(glm::vec3(1,0,0));
+	springColors.push_back(glm::vec3(1,0,0));
 
 }
 
@@ -73,6 +79,8 @@ void SceneShader::createVertexBuffer()
 
 	glBindVertexArray(0);
 
+
+
 	//read and create mesh geometry
 	readMesh("./models/cube.obj");
 	model_scale = 0.2;
@@ -98,6 +106,10 @@ void SceneShader::createVertexBuffer()
         glBufferData(GL_ARRAY_BUFFER,  _mesh->normals.size() * sizeof (trimesh::vec), _mesh->normals.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
         glEnableVertexAttribArray(1);
+
+
+
+
 
 
 	glGenBuffers(1, &_meshIndicesBuffer );
@@ -197,12 +209,10 @@ void SceneShader::renderMesh()
 void SceneShader::renderLines()
 {
 
-	glLineWidth(2.5);
-	glColor3f(1.0, 0.0, 0.0);
-	glBegin(GL_LINES);
-	glVertex3f(0.0, 0.0, 0.0);
-	glVertex3f(15, 0, 0);
-	glEnd();
+	//change this to be a line between the top of the spring location and the bottom
+	//spring
+
+
 
 }
 
@@ -240,7 +250,7 @@ void SceneShader::render()
 {
 	renderPlane();
 	renderMesh();
-	//renderLines();
+	renderLines();
 	renderLight();
 }
 

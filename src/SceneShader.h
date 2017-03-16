@@ -59,6 +59,7 @@ private:
 	GLuint _programLight;
 	GLuint _programPlane;
 	GLuint _programMesh;
+	GLuint _programBasic;
 
 	GLuint _planeVertexArray;
 	GLuint _planeVertexBuffer;
@@ -67,6 +68,10 @@ private:
 	GLuint _meshVertexBuffer;
 	GLuint _meshNormalBuffer;
 	GLuint _meshIndicesBuffer;
+
+	GLuint _linesVertexArray;
+	GLuint _linesVertexBuffer;
+	GLuint _linesColorBuffer;
 
         GLint _mvUniform, _projUniform;
 
@@ -89,6 +94,9 @@ private:
 
 	trimesh::TriMesh* _mesh;
 	std::vector<unsigned int> _triangleIndices;
+
+	std::vector<glm::vec3> springLine;
+	std::vector<glm::vec3> springColors;
 
 	glm::vec3 lightPosition;
 
