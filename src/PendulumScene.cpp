@@ -14,20 +14,26 @@ PendulumScene::PendulumScene() {
 	vec3 initLocation = vec3(0.0f, 0.8f, 0.0f);
 	float currentMass = 0.05f;
 	PhysicsMass* initialMass = new PhysicsMass(initLocation,currentMass);
-	initialMass->isFixed = true;
+	initialMass->isFixed = false;
 
 
 	vec3 currentLocation = initLocation;
 
 
 	PhysicsMass* previousMass = initialMass;
+	if (previousMass->isFixed)
+		printf("Expected \n");
+	else
+		printf("Not expected \n");
+
 	masses.push_back(previousMass);
 	//make n masses based on the initial location of the mass
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 1; i++)
 	{
-		currentMass += 1.5;
+
 		currentLocation.x += 0.1;
 		PhysicsMass* aMass = new PhysicsMass(currentLocation, currentMass);
+
 
 
 
@@ -35,13 +41,13 @@ PendulumScene::PendulumScene() {
 
 		vec3 springLocation = currentLocation - vec3(0.1f, 0.0f, 0.0f);
 
-		vec3 vecBetweenSpringAndMass = springLocation - currentLocation;
+		vec3 vecBetweenSpringAndMass = initLocation - currentLocation;
 
-		double x_r = length(  vecBetweenSpringAndMass);
+		double x_r = 0.8f * length(vecBetweenSpringAndMass);
 
-		double x_c = length(currentLocation - springLocation);
+		double x_c = 0;
 
-		PhysicsSpring* spring = new PhysicsSpring(springLocation, .5f, x_r, x_c, previousMass, aMass);
+		PhysicsSpring* spring = new PhysicsSpring(springLocation, 1.0f, x_r, x_c, previousMass, aMass);
 		previousMass = aMass;
 
 		//add this mass to the mass list
@@ -88,7 +94,7 @@ void PendulumScene::applyTimeStep(float delta_time)
 {
 
 	float gravity = -9.8196f;
-	float dampeningFactor = 0.5f;
+	float dampeningFactor = 0.05f;
 
 	//zero out all the forces on the masses
 		for (PhysicsMass* mass:masses)
@@ -106,7 +112,7 @@ void PendulumScene::applyTimeStep(float delta_time)
 			//apply damping
 
 			vec3 dampeningForce =  -dampeningFactor * mass->getVelocity();
-			//mass->applyForce(dampeningForce);
+			mass->applyForce(dampeningForce);
 
 
 

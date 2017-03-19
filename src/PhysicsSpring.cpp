@@ -58,12 +58,14 @@ void PhysicsSpring::applyForce()
 	vec3 locB = massB->getPostion();
 
 
-	double x = length(locA - locB); //get the length between A and B
+	vec3 aToB = locA - locB;
+	double x = length(aToB); //get the length between A and B
 
 
 	float forceScalar = -k * (x - x_r);
 
-	vec3 forceVectorOnA = forceScalar * (locB - locA) * (1.0f/length(locB - locA));
+
+	vec3 forceVectorOnA = forceScalar * glm::normalize(aToB);
 	vec3 forceVectorOnB = -1.0f * forceVectorOnB;
 
 

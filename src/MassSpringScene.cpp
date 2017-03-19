@@ -21,7 +21,7 @@ MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation) :Scene(
 {
 
 	massA = new PhysicsMass(massLocation, 0.05f);
-	massB = new PhysicsMass(springLocation, 2.0f);
+	massB = new PhysicsMass(springLocation, 1.0f);
 
 	massB->isFixed = true;
 
@@ -29,7 +29,7 @@ MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation) :Scene(
 
 	vec3 vecBetweenSpringAndMass = springLocation - massLocation;
 
-	double x_r =  1.0;
+	double x_r =  0.8 * length(vecBetweenSpringAndMass);
 
 	double x_c = length(massLocation - springLocation);
 
@@ -78,7 +78,7 @@ void MassSpringScene::applyTimeStep(float deltaTime)
 
 
 	float gravity = -9.8196f;
-	float dampeningFactor = 0.5f;
+	float dampeningFactor = 0.05f;
 
 	//zero out all the forces on the masses
 		for (PhysicsMass* mass:masses)
@@ -96,7 +96,7 @@ void MassSpringScene::applyTimeStep(float deltaTime)
 			//apply damping
 
 			vec3 dampeningForce =  -dampeningFactor * mass->getVelocity();
-			//mass->applyForce(dampeningForce);
+			mass->applyForce(dampeningForce);
 
 
 
