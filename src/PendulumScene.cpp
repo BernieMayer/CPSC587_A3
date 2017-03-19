@@ -89,7 +89,7 @@ vector<vec3> PendulumScene::getGeometry()
 
 }
 
-//not currently implemented..
+
 void PendulumScene::applyTimeStep(float delta_time)
 {
 
@@ -118,7 +118,7 @@ void PendulumScene::applyTimeStep(float delta_time)
 
 		}
 
-		//iterate through springs applying
+		//iterate through springs applying spring force where need
 
 		for (PhysicsSpring* s : springs)
 		{
