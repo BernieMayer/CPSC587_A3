@@ -24,17 +24,64 @@ SceneShader::SceneShader(): Shader()
 	lightPosition = glm::vec3(0.5, 0.5, 0.5);
 
 
+	pointLocation = glm::vec3(0.0, 0.8, 0.0);
 
-	springScene = new MassSpringScene(glm::vec3(0.0, 0.2, 0), glm::vec3(0, 0.5, 0.0));
+	springScene = new MassSpringScene(glm::vec3(0.0, 0.0, 0), pointLocation);
 
 	springLine.push_back(glm::vec3(0, 0.2, 0));
 	springLine.push_back(glm::vec3(0, 0.8, 0.0));
 
-	pointLocation = glm::vec3(0.0, 0.8, 0.0);
 
+
+	scene_Type = SceneType::MASS_SPRING_SCENE;
 
 	springColors.push_back(glm::vec3(1.0,0.0,0));
 	springColors.push_back(glm::vec3(1.0,0.0,0));
+
+
+
+	PendulumScene* aScene = new PendulumScene();
+
+	scene = aScene;
+
+	springLine = scene->getGeometry();
+
+
+	//setting up the colors right
+	for (auto a: springLine)
+	{
+		springColors.push_back(glm::vec3(1.0,0.0, 0.0));
+	}
+
+
+
+
+
+}
+
+SceneShader::SceneShader(SceneType type) : SceneShader()
+{
+
+
+	if (type == SceneType::PENDULUM_SCENE)
+	{
+		//set up the scene for
+
+		springLine.clear();
+
+
+		PendulumScene* aScene = new PendulumScene();
+
+
+		//scene = aScene;
+
+
+		springLine = aScene->getGeometry();
+
+
+		//set up the springColors..
+
+	}
 
 }
 
@@ -196,7 +243,8 @@ void SceneShader::renderMesh()
 
 	springScene->applyTimeStep(0.0025f);
 
-	meshLocation = springScene->getLocationOfMass();
+	if (scene_Type == SceneType::MASS_SPRING_SCENE)
+		meshLocation = springScene->getLocationOfMass();
 
 
 	//scene matrices and camera setup
@@ -261,18 +309,27 @@ void SceneShader::renderLines()
 	glUniformMatrix4fv(glGetUniformLocation(_programBasic, "perspectiveMatrix"), 1, GL_FALSE, glm::value_ptr(_projection));
 
 
+
+	scene->applyTimeStep(0.0025f);
+	springLine = scene->getGeometry();
+	/*
 	springLine.clear();
 
 	springLine.push_back(meshLocation);
 	springLine.push_back(pointLocation);
-
+	*/
 	glBindBuffer(GL_ARRAY_BUFFER, _linesVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER,  springLine.size() * sizeof (glm::vec3), springLine.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, _linesColorBuffer);
 	glBufferData(GL_ARRAY_BUFFER,  springColors.size() * sizeof (glm::vec3), springColors.data(), GL_STATIC_DRAW);
 
-	glDrawArrays(GL_LINES, 0, springLine.size());
+
+	glPointSize(15.0f);
+
+	glDrawArrays(GL_LINE_STRIP, 0, springLine.size());
+	glDrawArrays(GL_POINTS, 0, springLine.size());
+
 
 	glBindVertexArray(0);
 
@@ -313,7 +370,7 @@ void SceneShader::renderLight()
 void SceneShader::render()
 {
 	renderPlane();
-	renderMesh();
+	//renderMesh();
 	renderLines();
 	renderLight();
 }

@@ -15,10 +15,18 @@
 
 #include "TriMesh.h"
 #include "MassSpringScene.h"
+#include "PendulumScene.h"
+#include "Scene.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
+enum SceneType
+{
+	MASS_SPRING_SCENE,
+	PENDULUM_SCENE
+};
 
 
 class SceneShader : public Shader
@@ -26,6 +34,8 @@ class SceneShader : public Shader
 public:
 
 	SceneShader();
+	SceneShader(SceneType type);
+
 	~SceneShader();
 
 	void startup ();
@@ -73,7 +83,7 @@ private:
 	GLuint _linesVertexBuffer;
 	GLuint _linesColorBuffer;
 
-        GLint _mvUniform, _projUniform;
+    GLint _mvUniform, _projUniform;
 
 	/* Matrices */
 	glm::mat4 _modelview;
@@ -102,6 +112,9 @@ private:
 	std::vector<glm::vec3> springColors;
 
 	glm::vec3 lightPosition;
+
+	SceneType scene_Type;
+	Scene* scene;
 
 };
 

@@ -7,6 +7,7 @@
 
 #include "MassSpringScene.h"
 
+/*
 MassSpringScene::MassSpringScene() {
 	// TODO Auto-generated constructor stub
 
@@ -14,10 +15,12 @@ MassSpringScene::MassSpringScene() {
 
 	//mass = new PhysicsBox()
 }
+*/
 
-MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation)
+MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation) :Scene()
 {
-	massA = new PhysicsMass(massLocation, 5.0f);
+
+	massA = new PhysicsMass(massLocation, 0.05f);
 	massB = new PhysicsMass(springLocation, 2.0f);
 
 	massB->isFixed = true;
@@ -26,11 +29,11 @@ MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation)
 
 	vec3 vecBetweenSpringAndMass = springLocation - massLocation;
 
-	double x_r = length( springLocation + 0.2f * vecBetweenSpringAndMass);
+	double x_r =  1.0;
 
 	double x_c = length(massLocation - springLocation);
 
-	spring = new PhysicsSpring(springLocation, 500.0f, x_r, x_c, massA, massB);
+	spring = new PhysicsSpring(springLocation, 5.0f, x_r, x_c, massA, massB);
 
 	v_t = vec3(0,0,0);
 
@@ -59,8 +62,17 @@ glm::vec3 MassSpringScene::getLocationOfSpring()
 }
 
 
+vector<vec3> MassSpringScene::getGeometry()
+{
+	vector<vec3> locations;
+
+	for (auto mass:masses)
+		locations.push_back(mass->getPostion());
+
+	return locations;
+}
 //Now is functional
-void MassSpringScene::applyTimeStep(double deltaTime)
+void MassSpringScene::applyTimeStep(float deltaTime)
 {
 
 
@@ -78,13 +90,13 @@ void MassSpringScene::applyTimeStep(double deltaTime)
 		{
 			//apply gravity
 
-			mass->applyForce(mass->getMass() * vec3(0, gravity, 0));
+			//mass->applyForce(mass->getMass() * vec3(0, gravity, 0));
 
 
 			//apply damping
 
-			vec3 dampeningForce = - dampeningFactor * mass->getVelocity();
-			mass->applyForce(dampeningForce);
+			vec3 dampeningForce =  -dampeningFactor * mass->getVelocity();
+			//mass->applyForce(dampeningForce);
 
 
 

@@ -186,6 +186,10 @@ int main( int argc, char**argv )
 
 	startGlew();
 
+
+
+
+
 	while ( !glfwWindowShouldClose(window) )
 	{
 		float ratio;

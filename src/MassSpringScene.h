@@ -11,20 +11,22 @@
 #include "PhysicsSpring.h"
 #include "PhysicsObject.h"
 #include <glm/glm.hpp>
+#include "Scene.h"
 #include "PhysicsMass.h"
 
 using namespace glm;
 
-class MassSpringScene {
+class MassSpringScene : public Scene {
 public:
-	MassSpringScene();
+	//MassSpringScene();
 
 	MassSpringScene(vec3 massLocation, vec3 springLocation);
 	virtual ~MassSpringScene();
 
-	void applyTimeStep(double delta_time);
+	void applyTimeStep(float delta_time);
 	glm::vec3 getLocationOfMass();
 	glm::vec3 getLocationOfSpring();
+	vector<vec3> getGeometry();
 
 	vec3 v_t;
 

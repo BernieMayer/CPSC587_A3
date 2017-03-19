@@ -27,6 +27,16 @@ PhysicsSpring::PhysicsSpring(glm::vec3 argPos, double arg_k, glm::vec3 arg_x_r, 
 
 */
 
+vec3 PhysicsSpring::getMassA_Location()
+{
+	return massA->getPostion();
+}
+
+vec3 PhysicsSpring::getMassB_Location()
+{
+	return massB->getPostion();
+}
+
 PhysicsSpring::PhysicsSpring(glm::vec3 argPos,
 		double arg_k, double arg_x_r, double arg_x_c, PhysicsMass* arg_massA, PhysicsMass* arg_massB )
 	: PhysicsObject(argPos)
