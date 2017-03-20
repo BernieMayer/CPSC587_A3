@@ -7,15 +7,14 @@
 
 #include "MassSpringScene.h"
 
-/*
-MassSpringScene::MassSpringScene() {
-	// TODO Auto-generated constructor stub
 
-	//set up the physics Objects
+MassSpringScene::MassSpringScene()
+:MassSpringScene(glm::vec3(0.0, 0.0, 0),glm::vec3(0.0, 0.8, 0.0))
+{
 
-	//mass = new PhysicsBox()
+
 }
-*/
+
 
 MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation) :Scene()
 {

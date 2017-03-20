@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <GLFW/glfw3.h>
 
+#include "Scene.h"
 #include "SceneShader.h"
 
 double mouse_old_x, mouse_old_y;
@@ -51,6 +52,13 @@ void keyboard( unsigned char key, int x, int y )
 	case (GLFW_KEY_E):
 				shader.updateLightPositionZ(factor);
 		break;
+
+	case (GLFW_KEY_1):
+			shader.switchScene(SceneType::MASS_SPRING_SCENE);
+			break;
+	case (GLFW_KEY_2):
+			shader.switchScene(SceneType::PENDULUM_SCENE);
+			break;
 
 	default:
 		break;

@@ -22,11 +22,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-enum SceneType
-{
-	MASS_SPRING_SCENE,
-	PENDULUM_SCENE
-};
+
 
 
 class SceneShader : public Shader
@@ -41,6 +37,8 @@ public:
 	void startup ();
 	void shutdown ();
 	void render();
+
+	void switchScene(SceneType type);
 
 	void renderPlane();
 	void renderMesh();

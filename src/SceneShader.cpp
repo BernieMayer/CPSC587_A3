@@ -26,7 +26,7 @@ SceneShader::SceneShader(): Shader()
 
 	pointLocation = glm::vec3(0.0, 0.8, 0.0);
 
-	springScene = new MassSpringScene(glm::vec3(0.0, 0.0, 0), pointLocation);
+	springScene = new MassSpringScene();
 
 	springLine.push_back(glm::vec3(0, 0.2, 0));
 	springLine.push_back(glm::vec3(0, 0.8, 0.0));
@@ -40,9 +40,8 @@ SceneShader::SceneShader(): Shader()
 
 
 
-	PendulumScene* aScene = new PendulumScene();
 
-	scene = aScene;
+	scene = new PendulumScene();
 
 	springLine = scene->getGeometry();
 
@@ -82,6 +81,49 @@ SceneShader::SceneShader(SceneType type) : SceneShader()
 		//set up the springColors..
 
 	}
+
+}
+
+
+//This method is used to switch scenes
+void SceneShader::switchScene(SceneType type)
+{
+	if (type == SceneType::MASS_SPRING_SCENE)
+	{
+		//switch the scene to the mass_spring_scene
+
+		scene = new MassSpringScene();
+
+		springLine = scene->getGeometry();
+
+
+		//setting up the colors right
+		for (auto a: springLine)
+		{
+			springColors.push_back(glm::vec3(1.0,0.0, 0.0));
+		}
+
+
+		scene_Type = SceneType::MASS_SPRING_SCENE;
+
+
+
+	} else if (type == SceneType::PENDULUM_SCENE)
+	{
+		//set up the pendulum scene
+		scene = new PendulumScene();
+
+		springLine = scene->getGeometry();
+
+
+		//setting up the colors right
+		for (auto a: springLine)
+		{
+			springColors.push_back(glm::vec3(1.0,0.0, 0.0));
+		}
+		scene_Type = SceneType::PENDULUM_SCENE;
+	}
+
 
 }
 

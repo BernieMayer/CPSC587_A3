@@ -18,7 +18,7 @@ using namespace glm;
 
 class MassSpringScene : public Scene {
 public:
-	//MassSpringScene();
+	MassSpringScene();
 
 	MassSpringScene(vec3 massLocation, vec3 springLocation);
 	virtual ~MassSpringScene();

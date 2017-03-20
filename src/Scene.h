@@ -11,6 +11,12 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+enum SceneType
+{
+	MASS_SPRING_SCENE,
+	PENDULUM_SCENE
+};
+
 
 using namespace glm;
 using namespace std;
