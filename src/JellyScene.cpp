@@ -25,3 +25,9 @@ void JellyScene::applyTimeStep(float delta_time)
 {
 
 }
+
+vector<vec3> JellyScene::getGeometry()
+{
+	vector<vec3> verts;
+	return verts;
+}

@@ -9,6 +9,11 @@
 #define JELLYSCENE_H_
 
 #include "Scene.h"
+#include "PhysicsMass.h"
+#include <glm/glm.hpp>
+#include <vector>
+
+using namespace std;
 
 class JellyScene: public Scene {
 public:

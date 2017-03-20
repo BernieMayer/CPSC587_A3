@@ -66,7 +66,7 @@ void PhysicsSpring::applyForce()
 
 
 	vec3 forceVectorOnA = forceScalar * glm::normalize(aToB);
-	vec3 forceVectorOnB = -1.0f * forceVectorOnB;
+	vec3 forceVectorOnB = -1.0f * forceVectorOnA;
 
 
 	massA->applyForce(forceVectorOnA);
