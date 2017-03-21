@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/ClothScene.cpp \
 ../src/JellyScene.cpp \
 ../src/MassSpringScene.cpp \
 ../src/PendulumScene.cpp \
@@ -16,6 +17,7 @@ CPP_SRCS += \
 ../src/main.cpp 
 
 OBJS += \
+./src/ClothScene.o \
 ./src/JellyScene.o \
 ./src/MassSpringScene.o \
 ./src/PendulumScene.o \
@@ -28,6 +30,7 @@ OBJS += \
 ./src/main.o 
 
 CPP_DEPS += \
+./src/ClothScene.d \
 ./src/JellyScene.d \
 ./src/MassSpringScene.d \
 ./src/PendulumScene.d \

@@ -55,6 +55,8 @@ JellyScene::JellyScene() {
 	makeSpring(m7, m6);
 	makeSpring(m6, m4);
 
+	//subdivideJellyCube();
+
 
 	/*
 	makeSpring(p0, p1);
@@ -169,17 +171,46 @@ void JellyScene::subdivideJellyCube()
 	int i = 0;
 	vec3 initPos = vec3(0,0,0);
 
+	vector<PhysicsMass*> newMassesToAdd;
+
 	for (auto mass: masses)
 	{
 		//check against every other mass to see if it has a neighbour that is 0.5/4 away in the x
 
+		vec3 pos  = mass->getPosition();
+		bool check = false;
 		for (auto mass2: masses)
 		{
 
 
+			vec3 pos2 = mass2->getPosition();
 
+			double dist = pos.x - pos2.x;
+
+			if (abs(dist) >= 0.20000 && !check )
+			{
+
+				check = true;
+
+			}
+		}
+
+		if (check)
+		{
+			printf("Make a new mass \n");
+			vec3 new_pos = pos + vec3(0.2, 0.0, 0.0);
+			PhysicsMass* newMass = new PhysicsMass(new_pos, 0.5f);
+
+			makeSpring(mass, newMass);
+			newMassesToAdd.push_back(newMass);
 		}
 	}
+
+	masses.insert(masses.end(), newMassesToAdd.begin(), newMassesToAdd.end());
+
+
+
+	//masses.push_back(newMassesToAdd);
 
 
 
