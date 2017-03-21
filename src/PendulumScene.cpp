@@ -40,7 +40,7 @@ PendulumScene::PendulumScene() {
 
 		vec3 vecBetweenSpringAndMass = initLocation - currentLocation;
 
-		double x_r = 0.2f * length(vecBetweenSpringAndMass);
+		double x_r = 0.1f * length(vecBetweenSpringAndMass);
 
 		double x_c = 0;
 

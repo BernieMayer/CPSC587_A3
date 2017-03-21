@@ -55,13 +55,15 @@ void keyboard( unsigned char key, int x, int y )
 
 	case (GLFW_KEY_1):
 			shader.switchScene(SceneType::MASS_SPRING_SCENE);
-			break;
+		break;
 	case (GLFW_KEY_2):
 			shader.switchScene(SceneType::PENDULUM_SCENE);
-			break;
+		break;
 	case (GLFW_KEY_3):
 			shader.switchScene(SceneType::JELLY_SCENE);
-			break;
+		break;
+	case(GLFW_KEY_4):
+			shader.switchScene(SceneType::CLOTH_SCENE);
 
 	default:
 		break;

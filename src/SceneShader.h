@@ -17,6 +17,7 @@
 #include "MassSpringScene.h"
 #include "PendulumScene.h"
 #include "JellyScene.h"
+#include "ClothScene.h"
 #include "Scene.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>

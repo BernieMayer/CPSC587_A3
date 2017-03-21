@@ -97,6 +97,8 @@ void SceneShader::switchScene(SceneType type)
 
 		springLine = scene->getGeometry();
 
+		springColors.clear();
+
 
 		//setting up the colors right
 		for (auto a: springLine)
@@ -116,6 +118,8 @@ void SceneShader::switchScene(SceneType type)
 
 		springLine = scene->getGeometry();
 
+		springColors.clear();
+
 
 		//setting up the colors right
 		for (auto a: springLine)
@@ -129,9 +133,23 @@ void SceneShader::switchScene(SceneType type)
 
 		springLine = scene->getGeometry();
 
+		springColors.clear();
+
 		for (auto a: springLine)
 		{
 			springColors.push_back(glm::vec3(1.0, 0.0, 0.0));
+		}
+	} else if (type == SceneType::CLOTH_SCENE)
+	{
+		scene = new ClothScene();
+
+		springLine = scene->getGeometry();
+
+		springColors.clear();
+
+		for (auto a: springLine)
+		{
+			springColors.push_back(glm::vec3(1.0,0.0,0.0));
 		}
 	}
 
