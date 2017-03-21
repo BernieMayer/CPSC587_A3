@@ -12,6 +12,9 @@
 ClothScene::ClothScene() {
 	// TODO Auto-generated constructor stub
 
+
+	makeGrid();
+	/*
 	float scalingFactor = 0.5;
 
 	vec3 p0 = scalingFactor * vec3(0.0, 0.0, 0.0);
@@ -46,7 +49,7 @@ ClothScene::ClothScene() {
 		currentLocation.x += 0.1;
 
 	}
-*/
+
 	PhysicsMass* m1 = new PhysicsMass(p1, 0.05f);
 
 	/*
@@ -64,7 +67,7 @@ ClothScene::ClothScene() {
 			currentLocation.y += 0.1;
 
 		}
-*/
+
 	PhysicsMass* m2 = new PhysicsMass(p2, 0.05f);
 
 	m2->isFixed = true;
@@ -78,7 +81,7 @@ ClothScene::ClothScene() {
 
 
 	subdivideJellyCube();
-/*
+
 	makeSpring(m0, m1);
 	makeSpring(m1, m3);
 	makeSpring(m3, m2);
@@ -151,25 +154,35 @@ void ClothScene::makeGrid()
 	vector<PhysicsMass*> row_current;
 	vector<PhysicsMass*> row_previous;
 
-	float x;
-	float y;
-	x = 0.0;
-	y = 0.0;
+	vec3 initLocation =  vec3(0,0,0);
 
-	PhysicsMass* mass0 = new PhysicsMass(vec3(0, 0, 0));
+	float sizeGrid = 0.5;
+
+	int n = 5; //number of points in a line in the grid
+
+	PhysicsMass* mass0 = new PhysicsMass(initLocation, 0.5f);
+	mass0->isFixed = true;
 
 
 	PhysicsMass* prevMass = mass0;
 
 
-
-	while( x < 0.4)
+	vec3 currentLocation = initLocation;
+	while( currentLocation.y < (0.5 - 0.5f/(double) n))
 	{
-		x += 0.5/4;
+		currentLocation =  currentLocation + vec3(0, 0.5/4.0f ,0.0);
 
-		int i = masses.size();
-		//PhysicsMass* newMass =
+
+		PhysicsMass* newMass = new PhysicsMass(currentLocation, 0.5f);
+		makeSpring(prevMass, newMass);
+		prevMass = newMass;
+
 	}
+
+	currentLocation.y += 0.5/4.0f;
+	PhysicsMass* finalMass = new PhysicsMass(currentLocation, 0.5f);
+	finalMass->isFixed = true;
+	makeSpring(prevMass, finalMass);
 
 
 
@@ -185,7 +198,7 @@ void ClothScene::makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2)
 	double x_r0 = 0.2f * length(aMass->getPosition() - aMass2->getPosition());
 
 
-	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 6.0f, x_r0, 0.0f, aMass, aMass2);
+	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 500.0f, x_r0, 0.0f, aMass, aMass2);
 	springs.push_back(spring0);
 
 
@@ -210,7 +223,7 @@ void ClothScene::applyTimeStep(float delta_time)
 {
 
 	float gravity = -9.8196f;
-	float dampeningFactor = 0.02f;
+	float dampeningFactor = 0.8f;
 
 //zero out all the forces on the masses
 	for (PhysicsMass* mass:masses)
