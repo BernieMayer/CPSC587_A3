@@ -16,7 +16,7 @@ public:
 	PhysicsObject(glm::vec3 arg_Position);
 	virtual ~PhysicsObject();
 
-	glm::vec3 getPostion();
+	glm::vec3 getPosition();
 
 protected:
 	glm::vec3 position;

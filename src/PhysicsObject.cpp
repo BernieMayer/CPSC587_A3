@@ -22,7 +22,7 @@ PhysicsObject::PhysicsObject(glm::vec3 arg_Position)
 	position = arg_Position;
 }
 
-glm::vec3 PhysicsObject::getPostion()
+glm::vec3 PhysicsObject::getPosition()
 {
 	return position;
 }

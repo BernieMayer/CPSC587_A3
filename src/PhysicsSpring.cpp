@@ -29,12 +29,12 @@ PhysicsSpring::PhysicsSpring(glm::vec3 argPos, double arg_k, glm::vec3 arg_x_r, 
 
 vec3 PhysicsSpring::getMassA_Location()
 {
-	return massA->getPostion();
+	return massA->getPosition();
 }
 
 vec3 PhysicsSpring::getMassB_Location()
 {
-	return massB->getPostion();
+	return massB->getPosition();
 }
 
 PhysicsSpring::PhysicsSpring(glm::vec3 argPos,
@@ -54,8 +54,8 @@ PhysicsSpring::PhysicsSpring(glm::vec3 argPos,
 
 void PhysicsSpring::applyForce()
 {
-	vec3 locA = massA->getPostion();
-	vec3 locB = massB->getPostion();
+	vec3 locA = massA->getPosition();
+	vec3 locB = massB->getPosition();
 
 
 	vec3 aToB = locA - locB;

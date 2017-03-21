@@ -59,6 +59,9 @@ void keyboard( unsigned char key, int x, int y )
 	case (GLFW_KEY_2):
 			shader.switchScene(SceneType::PENDULUM_SCENE);
 			break;
+	case (GLFW_KEY_3):
+			shader.switchScene(SceneType::JELLY_SCENE);
+			break;
 
 	default:
 		break;

@@ -52,12 +52,12 @@ MassSpringScene::~MassSpringScene() {
 
 glm::vec3 MassSpringScene::getLocationOfMass()
 {
-	return massA->getPostion();
+	return massA->getPosition();
 }
 
 glm::vec3 MassSpringScene::getLocationOfSpring()
 {
-	return massB->getPostion();
+	return massB->getPosition();
 }
 
 
@@ -66,7 +66,7 @@ vector<vec3> MassSpringScene::getGeometry()
 	vector<vec3> locations;
 
 	for (auto mass:masses)
-		locations.push_back(mass->getPostion());
+		locations.push_back(mass->getPosition());
 
 	return locations;
 }
@@ -89,7 +89,7 @@ void MassSpringScene::applyTimeStep(float deltaTime)
 		{
 			//apply gravity
 
-			//mass->applyForce(mass->getMass() * vec3(0, gravity, 0));
+			mass->applyForce(mass->getMass() * vec3(0, gravity, 0));
 
 
 			//apply damping

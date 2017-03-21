@@ -10,10 +10,12 @@
 
 #include "Scene.h"
 #include "PhysicsMass.h"
+#include "PhysicsSpring.h"
 #include <glm/glm.hpp>
 #include <vector>
 
 using namespace std;
+using namespace glm;
 
 class JellyScene: public Scene {
 public:
@@ -23,8 +25,12 @@ public:
 	vector<vec3> getGeometry();
 	void applyTimeStep(float delta_time);
 private:
-	vector<vec3> vertices;
+
+	void subdivideJellyCube();
+	void makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2);
+	void makeSpring(vec3 aPoint, vec3 aPoint2); //This is just an easy function to make springs
 	vector<PhysicsMass*> masses;
+	vector<PhysicsSpring*> springs;
 
 
 };

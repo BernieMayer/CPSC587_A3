@@ -86,6 +86,7 @@ SceneShader::SceneShader(SceneType type) : SceneShader()
 
 
 //This method is used to switch scenes
+// TODO: Rename a so that is it better named
 void SceneShader::switchScene(SceneType type)
 {
 	if (type == SceneType::MASS_SPRING_SCENE)
@@ -122,6 +123,16 @@ void SceneShader::switchScene(SceneType type)
 			springColors.push_back(glm::vec3(1.0,0.0, 0.0));
 		}
 		scene_Type = SceneType::PENDULUM_SCENE;
+	} else if (type == SceneType::JELLY_SCENE)
+	{
+		scene = new JellyScene();
+
+		springLine = scene->getGeometry();
+
+		for (auto a: springLine)
+		{
+			springColors.push_back(glm::vec3(1.0, 0.0, 0.0));
+		}
 	}
 
 
