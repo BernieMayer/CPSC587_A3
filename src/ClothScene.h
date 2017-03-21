@@ -26,6 +26,9 @@ public:
 	vector<vec3> getGeometry();
 	void applyTimeStep(float delta_time);
 private:
+
+	void makeGrid();
+	void subdivideJellyCube();
 	void makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2);
 
 	vector<PhysicsMass*> masses;

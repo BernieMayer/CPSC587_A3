@@ -23,25 +23,158 @@ ClothScene::ClothScene() {
 
 
 	PhysicsMass* m0 = new PhysicsMass(p0, 0.05f);
-
 	m0->isFixed = true;
 
+/*
+	int n = 4;
+	double delta_x = 0.5/((double) n);
+
+
+	PhysicsMass* prevMass = m0;
+	vec3 currentLocation = p0;
+	//make n masses based on the initial location of the mass
+	for (int i = 0; i < 5; i++)
+	{
+
+		//currentMass += 0.001;
+		vec3 nextLocation = currentLocation + vec3(0.1, 0.0, 0.0);
+
+		PhysicsMass* tmpMass = new PhysicsMass(nextLocation, 0.05f);
+
+		makeSpring(prevMass, tmpMass);
+		prevMass = tmpMass;
+		currentLocation.x += 0.1;
+
+	}
+*/
 	PhysicsMass* m1 = new PhysicsMass(p1, 0.05f);
+
+	/*
+	currentLocation = p1;
+	for (int i = 0; i < 5; i++)
+		{
+
+			//currentMass += 0.001;
+			vec3 nextLocation = currentLocation + vec3(0.0, 0.1, 0.0);
+
+			PhysicsMass* tmpMass = new PhysicsMass(nextLocation, 0.05f);
+
+			makeSpring(prevMass, tmpMass);
+			prevMass = tmpMass;
+			currentLocation.y += 0.1;
+
+		}
+*/
 	PhysicsMass* m2 = new PhysicsMass(p2, 0.05f);
 
 	m2->isFixed = true;
 
 	PhysicsMass* m3 = new PhysicsMass(p3, 0.05f);
 
+	masses.push_back(m0);
+	masses.push_back(m1);
+	masses.push_back(m2);
+	masses.push_back(m3);
+
+
+	subdivideJellyCube();
+/*
 	makeSpring(m0, m1);
 	makeSpring(m1, m3);
 	makeSpring(m3, m2);
 	makeSpring(m2, m0);
-
+	*/
 }
 
 ClothScene::~ClothScene() {
 	// TODO Auto-generated destructor stub
+}
+
+void ClothScene::subdivideJellyCube()
+{
+
+	for (auto mass0:masses)
+	{
+		vec3 pos0 = mass0->getPosition();
+		//check against every other mass
+		bool check = false;
+
+
+		for (auto mass1:masses)
+		{
+			vec3 pos1 = mass1->getPosition();
+
+			double distance = pos0.x - pos1.x;
+
+			if ( distance < 0.1 )
+			{
+				check = true;
+			}
+		}
+		if (check)
+		{
+			vec3 newPos = pos0 + vec3(0.1, 0, 0);
+			PhysicsMass* tmp = new PhysicsMass(newPos, 0.05f);
+
+			makeSpring(mass0, tmp);
+		}
+
+		check = false;
+		for (auto mass1:masses)
+		{
+			vec3 pos1 = mass1->getPosition();
+
+			double distance = pos0.y - pos1.y;
+
+			if ( distance < 0.1 )
+			{
+				check = true;
+			}
+		}
+
+		if (check)
+		{
+			vec3 newPos = pos0 + vec3(0.0, -0.1, 0);
+			PhysicsMass* tmp = new PhysicsMass(newPos, 0.05f);
+
+			makeSpring(mass0, tmp);
+		}
+
+
+
+
+	}
+}
+
+void ClothScene::makeGrid()
+{
+	vector<PhysicsMass*> row_current;
+	vector<PhysicsMass*> row_previous;
+
+	float x;
+	float y;
+	x = 0.0;
+	y = 0.0;
+
+	PhysicsMass* mass0 = new PhysicsMass(vec3(0, 0, 0));
+
+
+	PhysicsMass* prevMass = mass0;
+
+
+
+	while( x < 0.4)
+	{
+		x += 0.5/4;
+
+		int i = masses.size();
+		//PhysicsMass* newMass =
+	}
+
+
+
+
+
 }
 
 void ClothScene::makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2)
