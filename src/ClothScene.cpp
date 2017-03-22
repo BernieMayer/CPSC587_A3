@@ -91,6 +91,11 @@ ClothScene::ClothScene() {
 
 ClothScene::~ClothScene() {
 	// TODO Auto-generated destructor stub
+
+	masses.clear();
+	springs.clear();
+
+
 }
 
 void ClothScene::subdivideJellyCube()
@@ -167,6 +172,7 @@ void ClothScene::makeGrid()
 	//Note the first row is sorta made manually since the
 	//cloth needs two fixed points
 	PhysicsMass* mass0 = new PhysicsMass(initLocation, mass);
+	masses.push_back(mass0);
 	mass0->isFixed = true;
 	currentRow.push_back(mass0);
 
@@ -180,7 +186,8 @@ void ClothScene::makeGrid()
 
 
 		PhysicsMass* newMass = new PhysicsMass(currentLocation, mass);
-		newMass->isFixed = true;
+		masses.push_back(newMass);
+		//newMass->isFixed = true;
 		makeSpring(prevMass, newMass);
 		currentRow.push_back(newMass);
 		prevMass = newMass;
@@ -189,6 +196,7 @@ void ClothScene::makeGrid()
 
 	currentLocation.y += sizeGrid/(double)n;
 	PhysicsMass* finalMass = new PhysicsMass(currentLocation, mass);
+	masses.push_back(finalMass);
 	finalMass->isFixed = true;
 
 	currentRow.push_back(finalMass);
@@ -211,6 +219,7 @@ void ClothScene::makeGrid()
 		{
 
 			PhysicsMass* newMass = new PhysicsMass(currentLocation, mass);
+			masses.push_back(newMass);
 			currentLocation.y += sizeGrid/(float)n;
 
 			if (j == 0) {
@@ -236,13 +245,15 @@ void ClothScene::makeGrid()
 
 void ClothScene::makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2)
 {
-	masses.push_back(aMass);
-	masses.push_back(aMass2);
-
-	double x_r0 = 0.5 * length(aMass->getPosition() - aMass2->getPosition());
 
 
-	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 100.0f, x_r0, 0.0f, aMass, aMass2);
+	//masses.push_back(aMass);
+	//masses.push_back(aMass2);
+
+	double x_r0 = 0.9 * length(aMass->getPosition() - aMass2->getPosition());
+
+
+	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 1000.0f, x_r0, 0.0f, aMass, aMass2);
 	springs.push_back(spring0);
 
 
@@ -268,7 +279,7 @@ void ClothScene::applyTimeStep(float delta_time)
 
 
 	float gravity = -9.8196f;
-	float dampeningFactor = 0.9f;
+	float dampeningFactor = 0.8f;
 
 //zero out all the forces on the masses
 	for (PhysicsMass* mass:masses)

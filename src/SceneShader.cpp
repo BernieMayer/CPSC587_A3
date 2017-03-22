@@ -141,6 +141,7 @@ void SceneShader::switchScene(SceneType type)
 		}
 	} else if (type == SceneType::CLOTH_SCENE)
 	{
+		delete scene;
 		scene = new ClothScene();
 
 		springLine = scene->getGeometry();
