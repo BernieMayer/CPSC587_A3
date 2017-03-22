@@ -146,43 +146,87 @@ void ClothScene::subdivideJellyCube()
 
 
 
+
+
 	}
 }
 
 void ClothScene::makeGrid()
 {
-	vector<PhysicsMass*> row_current;
-	vector<PhysicsMass*> row_previous;
+	vector<vector<PhysicsMass*>> grid;
+	vector<PhysicsMass*> currentRow;
 
 	vec3 initLocation =  vec3(0,0,0);
 
 	float sizeGrid = 0.5;
 
-	int n = 5; //number of points in a line in the grid
+	float mass = 0.05;
+	int n = 20; //number of points in a line in the grid
 
-	PhysicsMass* mass0 = new PhysicsMass(initLocation, 0.5f);
+
+	//Note the first row is sorta made manually since the
+	//cloth needs two fixed points
+	PhysicsMass* mass0 = new PhysicsMass(initLocation, mass);
 	mass0->isFixed = true;
+	currentRow.push_back(mass0);
 
 
 	PhysicsMass* prevMass = mass0;
 
 
 	vec3 currentLocation = initLocation;
-	while( currentLocation.y < (0.5 - 0.5f/(double) n))
-	{
-		currentLocation =  currentLocation + vec3(0, 0.5/4.0f ,0.0);
+	for (int r = 0; r < (n - 2); r++){
+		currentLocation =  currentLocation + vec3(0, sizeGrid/(double)n ,0.0);
 
 
-		PhysicsMass* newMass = new PhysicsMass(currentLocation, 0.5f);
+		PhysicsMass* newMass = new PhysicsMass(currentLocation, mass);
+		newMass->isFixed = true;
 		makeSpring(prevMass, newMass);
+		currentRow.push_back(newMass);
 		prevMass = newMass;
-
 	}
 
-	currentLocation.y += 0.5/4.0f;
-	PhysicsMass* finalMass = new PhysicsMass(currentLocation, 0.5f);
+
+	currentLocation.y += sizeGrid/(double)n;
+	PhysicsMass* finalMass = new PhysicsMass(currentLocation, mass);
 	finalMass->isFixed = true;
+
+	currentRow.push_back(finalMass);
+
 	makeSpring(prevMass, finalMass);
+
+	grid.push_back(currentRow);
+
+	currentLocation = initLocation;
+
+
+	for (int i = 1; i < n; i++)
+	{
+
+		currentRow.clear();
+		currentLocation.x += sizeGrid/(float)n;
+		currentLocation.y = 0;
+		//make the new row
+		for (int j = 0; j < n; j++)
+		{
+
+			PhysicsMass* newMass = new PhysicsMass(currentLocation, mass);
+			currentLocation.y += sizeGrid/(float)n;
+
+			if (j == 0) {
+				makeSpring(newMass, grid.at(i - 1).at(j));
+			} else {
+				makeSpring(newMass, grid.at(i - 1).at(j));
+				makeSpring(currentRow.at(j - 1), grid.at(i - 1).at(j - 1));
+				makeSpring(newMass, grid.at(i - 1).at(j - 1));
+				makeSpring(newMass, currentRow.at(j -1));
+			}
+			currentRow.push_back(newMass);
+		}
+
+		grid.push_back(currentRow);
+	}
+
 
 
 
@@ -195,10 +239,10 @@ void ClothScene::makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2)
 	masses.push_back(aMass);
 	masses.push_back(aMass2);
 
-	double x_r0 = 0.2f * length(aMass->getPosition() - aMass2->getPosition());
+	double x_r0 = 0.5 * length(aMass->getPosition() - aMass2->getPosition());
 
 
-	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 500.0f, x_r0, 0.0f, aMass, aMass2);
+	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 100.0f, x_r0, 0.0f, aMass, aMass2);
 	springs.push_back(spring0);
 
 
@@ -222,8 +266,9 @@ vector<vec3> ClothScene::getGeometry()
 void ClothScene::applyTimeStep(float delta_time)
 {
 
+
 	float gravity = -9.8196f;
-	float dampeningFactor = 0.8f;
+	float dampeningFactor = 0.9f;
 
 //zero out all the forces on the masses
 	for (PhysicsMass* mass:masses)
