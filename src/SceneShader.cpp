@@ -139,6 +139,7 @@ void SceneShader::switchScene(SceneType type)
 		{
 			springColors.push_back(glm::vec3(1.0, 0.0, 0.0));
 		}
+		scene_Type = SceneType::JELLY_SCENE;
 	} else if (type == SceneType::CLOTH_SCENE)
 	{
 		delete scene;
@@ -152,6 +153,7 @@ void SceneShader::switchScene(SceneType type)
 		{
 			springColors.push_back(glm::vec3(1.0,0.0,0.0));
 		}
+		scene_Type = SceneType::CLOTH_SCENE;
 	}
 
 
@@ -396,8 +398,10 @@ void SceneShader::renderLines()
 	glBindBuffer(GL_ARRAY_BUFFER, _linesColorBuffer);
 	glBufferData(GL_ARRAY_BUFFER,  springColors.size() * sizeof (glm::vec3), springColors.data(), GL_STATIC_DRAW);
 
-
-	glPointSize(15.0f);
+	if (scene_Type == SceneType::CLOTH_SCENE)
+		glPointSize(3.0f);
+	else
+		glPointSize(15.0f);
 
 	glDrawArrays(GL_LINE_STRIP, 0, springLine.size());
 	glDrawArrays(GL_POINTS, 0, springLine.size());

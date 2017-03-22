@@ -28,7 +28,7 @@ MassSpringScene::MassSpringScene(vec3 massLocation, vec3 springLocation) :Scene(
 
 	vec3 vecBetweenSpringAndMass = springLocation - massLocation;
 
-	double x_r =  0.8 * length(vecBetweenSpringAndMass);
+	double x_r =  0.4 * length(vecBetweenSpringAndMass);
 
 	double x_c = length(massLocation - springLocation);
 

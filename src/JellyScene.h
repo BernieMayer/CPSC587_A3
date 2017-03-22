@@ -26,9 +26,10 @@ public:
 	void applyTimeStep(float delta_time);
 private:
 
+	void makeVoxelGrid();
 	void subdivideJellyCube();
-	void makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2);
-	void makeSpring(vec3 aPoint, vec3 aPoint2); //This is just an easy function to make springs
+	void makeSpringUsingMass(PhysicsMass* aMass, PhysicsMass* aMass2);
+    //void makeSpring(vec3 aPoint, vec3 aPoint2); //This is just an easy function to make springs
 	vector<PhysicsMass*> masses;
 	vector<PhysicsSpring*> springs;
 
