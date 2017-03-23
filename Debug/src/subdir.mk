@@ -14,6 +14,7 @@ CPP_SRCS += \
 ../src/Scene.cpp \
 ../src/SceneShader.cpp \
 ../src/Shader.cpp \
+../src/WindScene.cpp \
 ../src/main.cpp 
 
 OBJS += \
@@ -27,6 +28,7 @@ OBJS += \
 ./src/Scene.o \
 ./src/SceneShader.o \
 ./src/Shader.o \
+./src/WindScene.o \
 ./src/main.o 
 
 CPP_DEPS += \
@@ -40,6 +42,7 @@ CPP_DEPS += \
 ./src/Scene.d \
 ./src/SceneShader.d \
 ./src/Shader.d \
+./src/WindScene.d \
 ./src/main.d 
 
 

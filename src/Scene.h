@@ -27,7 +27,7 @@ public:
 	Scene();
 	virtual ~Scene();
 
-	virtual vector<vec3> getGeometry()         = 0;
+	virtual vector<vec3> getGeometry()          = 0;
 	virtual void applyTimeStep(float delta_time)= 0;
 };
 

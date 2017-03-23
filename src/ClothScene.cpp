@@ -167,11 +167,6 @@ void ClothScene::makeGrid()
 		grid.push_back(currentRow);
 	}
 
-
-
-
-
-
 }
 
 void ClothScene::makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2)
