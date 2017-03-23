@@ -10,7 +10,15 @@
 JellyScene::JellyScene() {
 	// TODO Auto-generated constructor stub
 
-	makeVoxelGrid();
+	int n = 5;
+	float sizeGrid = 0.5;
+	float mass = 0.05;
+	makeMasses(n, sizeGrid, mass);
+
+
+	float distance = sqrt(pow(sizeGrid, 2) + pow(sizeGrid, 2));
+	createSprings(distance);
+	//makeVoxelGrid();
 	/*
 	float scalingFactor = 0.5;
 
@@ -77,6 +85,7 @@ JellyScene::JellyScene() {
 
 }
 
+
 JellyScene::~JellyScene() {
 	// TODO Auto-generated destructor stub
 }
@@ -87,7 +96,6 @@ JellyScene::~JellyScene() {
 void JellyScene::applyTimeStep(float delta_time)
 {
 
-	return;
 
 
 	float gravity = -9.8196f;
@@ -126,16 +134,21 @@ void JellyScene::applyTimeStep(float delta_time)
 		//Change the velocites and the positions of the masses
 		for (PhysicsMass* mass:masses)
 		{
-			mass->resolveForces((float) delta_time);
-
-
 			//Collision detection with the ground plane
 			if (mass->getPosition().y < -0.3)
 			{
 				vec3 pos = mass->getPosition();
 				pos.y = -0.3;
 				mass->setLocation(pos);
+				vec3 flipVelocity = mass->getVelocity();
+				flipVelocity.y *= -1.0f;
+
+				mass->applyForce(flipVelocity * dampeningFactor);
 			}
+			mass->resolveForces((float) delta_time);
+
+
+
 
 		}
 
@@ -256,48 +269,127 @@ void JellyScene::makeVoxelGrid()
 
 	current_grid.push_back(currentRow);
 
+	currentLocation = initLocation;
 
-	//make the voxel
-	for (int i = 0; i < n; i++)
-	{
-
-		//making the grids
-		for (int j = 1; j < n; j++)
+//for (int r = 0; r < n; r++) {
+	for (int i = 1; i < n; i++)
 		{
+
 			currentRow.clear();
-			currentLocation.y = 0;
 			currentLocation.x += sizeGrid/(float)n;
-			//making the rows
-			for (int k = 0; k < n; k++)
+			currentLocation.y = 0;
+			//make the new row
+			for (int j = 0; j < n; j++)
 			{
 
 				PhysicsMass* newMass = new PhysicsMass(currentLocation, mass);
 				masses.push_back(newMass);
-				currentLocation.y += sizeGrid/(double)n;
+				currentLocation.y += sizeGrid/(float)n;
 
-				if ( k == 0 && i == 0 )
-					makeSpringUsingMass(newMass, current_grid.at(j - 1).at(k));
-
-
-				//makeSpringUsingMass(currentRow.at(j - 1), current_grid.at(k - 1).at(j - 1));
-				//makeSpringUsingMass(newMass, current_grid.at(k - 1).at(j - 1));
-				//makeSpringUsingMass(newMass, currentRow.at(j - 1));
+				if (j == 0) {
+					makeSpringUsingMass(newMass, current_grid.at(i - 1).at(j));
+				} else {
+					makeSpringUsingMass(newMass, current_grid.at(i - 1).at(j));
+					makeSpringUsingMass(currentRow.at(j - 1), current_grid.at(i - 1).at(j - 1));
+					makeSpringUsingMass(newMass, current_grid.at(i - 1).at(j - 1));
+					makeSpringUsingMass(newMass, currentRow.at(j -1));
+				}
 				currentRow.push_back(newMass);
-
-
 			}
+
 			current_grid.push_back(currentRow);
+		}
+	voxel_grid.push_back(current_grid);
+//}
+	//now that we have the first grid we can construct further grids
+
+	currentLocation.x = 0;
+	currentLocation.y = 0;
+
+
+	for (int i = 0; i < (n - 1); i++)
+	{
+		current_grid = voxel_grid.at(i);
+		currentLocation.x = 0;
+		currentLocation.y = 0;
+		currentLocation.z += sizeGrid/(float)n;
+		for (int j = 0; j < n; j++){
+			currentLocation.y = 0;
 			currentRow.clear();
+			for (int k = 0; k < n; k++) {
+				PhysicsMass* newMass = new PhysicsMass(currentLocation, mass);
+				masses.push_back(newMass);
+				currentRow.push_back(newMass);
+				currentLocation.y += sizeGrid/(float) n;
+				if (j == 0)
+				{
+					makeSpringUsingMass(newMass, current_grid.at(j).at(k));
+				} else if (j == 0)
+				{
+					//makeSpringUsingMass(newMass, current_grid.at(j).at(k));
+					//makeSpringUsingMass(newMass, current_grid.at(j).at(k - 1));
+					//makeSpringUsingMass(newMass, currentRow.at(k - 1));
+				}
+			}
+			currentLocation.x += sizeGrid/(float)n;
+			current_grid.push_back(currentRow);
+		}
+		voxel_grid.push_back(current_grid);
+	}
+
+
+
+}
+
+void JellyScene::makeMasses(int n, float sizeGrid, float mass)
+{
+
+
+	vec3 initLocation = vec3(0, 0, 0);
+	for (int i = 0; i < n; i++ )
+	{
+		for (int j = 0; j < n; j++)
+		{
+			for (int k = 0; k < n; k++)
+			{
+				PhysicsMass* newMass = new PhysicsMass(initLocation, mass );
+				masses.push_back(newMass);
+
+				initLocation.x += sizeGrid/(float)n;
+			}
+			initLocation.y += sizeGrid/(float)n;
+			initLocation.x = 0.0;
+		}
+		initLocation.z += sizeGrid/(float)n;
+		initLocation.x = 0;
+		initLocation.y = 0;
+	}
+}
+
+void JellyScene::createSprings(float distance)
+{
+	for (int i = 0; i < masses.size(); i++)
+	{
+		for (int j = 0; (j < masses.size() && i != j); j++)
+		{
+			PhysicsMass* mass_i = masses.at(i);
+			PhysicsMass* mass_j = masses.at(j);
+
+			float d = length(mass_i->getPosition() - mass_j->getPosition());
+			if (d <= distance)
+			{
+				makeSpringUsingMass(mass_i, mass_j);
+			}
 		}
 	}
 }
 
 void JellyScene::makeSpringUsingMass(PhysicsMass* aMass, PhysicsMass* aMass2)
 {
-	double x_r0 = 0.9 * length(aMass->getPosition() - aMass2->getPosition());
+	double x_r0 =  length(aMass->getPosition() - aMass2->getPosition());
 
 
-	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 1000.0f, x_r0, 0.0f, aMass, aMass2);
+	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 1.0f, x_r0, 0.0f, aMass, aMass2);
 	springs.push_back(spring0);
 
 }

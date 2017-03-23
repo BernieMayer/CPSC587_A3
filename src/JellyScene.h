@@ -8,6 +8,8 @@
 #ifndef JELLYSCENE_H_
 #define JELLYSCENE_H_
 
+
+#include <math.h>
 #include "Scene.h"
 #include "PhysicsMass.h"
 #include "PhysicsSpring.h"
@@ -26,6 +28,9 @@ public:
 	void applyTimeStep(float delta_time);
 private:
 
+
+	void makeMasses(int n, float sizeGrid, float mass);
+	void createSprings(float distance);
 	void makeVoxelGrid();
 	void subdivideJellyCube();
 	void makeSpringUsingMass(PhysicsMass* aMass, PhysicsMass* aMass2);

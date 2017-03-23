@@ -118,7 +118,7 @@ void ClothScene::makeGrid()
 
 		PhysicsMass* newMass = new PhysicsMass(currentLocation, mass);
 		masses.push_back(newMass);
-		//newMass->isFixed = true;
+		//newMass->isFixed = true; //allows for making the first line
 		makeSpring(prevMass, newMass);
 		currentRow.push_back(newMass);
 		prevMass = newMass;
