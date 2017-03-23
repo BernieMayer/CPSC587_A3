@@ -25,6 +25,7 @@ SceneShader::SceneShader(): Shader()
 
 
 	pointLocation = glm::vec3(0.0, 0.8, 0.0);
+	meshLocation = glm::vec3(0, 0, 0);
 
 	springScene = new MassSpringScene();
 
@@ -329,8 +330,11 @@ void SceneShader::renderMesh()
 
 	springScene->applyTimeStep(0.0025f);
 
+	/*
 	if (scene_Type == SceneType::MASS_SPRING_SCENE)
 		meshLocation = springScene->getLocationOfMass();
+	*/
+
 
 
 	//scene matrices and camera setup
@@ -410,7 +414,7 @@ void SceneShader::renderLines()
 	glBindBuffer(GL_ARRAY_BUFFER, _linesColorBuffer);
 	glBufferData(GL_ARRAY_BUFFER,  springColors.size() * sizeof (glm::vec3), springColors.data(), GL_STATIC_DRAW);
 
-	if (scene_Type == SceneType::CLOTH_SCENE)
+	if (scene_Type == SceneType::CLOTH_SCENE || scene_Type == SceneType::WIND_SCENE)
 		glPointSize(3.0f);
 	else
 		glPointSize(15.0f);
@@ -418,6 +422,8 @@ void SceneShader::renderLines()
 	glDrawArrays(GL_LINE_STRIP, 0, springLine.size());
 	glDrawArrays(GL_POINTS, 0, springLine.size());
 
+	if (scene_Type == SceneType::WIND_SCENE)
+		glDrawArrays(GL_TRIANGLES, 0, springLine.size());
 
 	glBindVertexArray(0);
 
@@ -461,6 +467,8 @@ void SceneShader::render()
 	//renderMesh();
 	renderLines();
 	renderLight();
+
+
 }
 
 void SceneShader::setZTranslation(float z)

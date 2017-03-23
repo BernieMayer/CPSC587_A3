@@ -33,7 +33,6 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = src1.0.0
-DISTDIR = /home/ugd/bemayer/CPSC591/Phong_incomplete/src/.tmp/src1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS) -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread

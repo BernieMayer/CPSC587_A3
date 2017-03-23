@@ -11,18 +11,104 @@
 WindScene::WindScene() {
 	// TODO Auto-generated constructor stub
 	makeGrid();
+	float sizeGrid = 0.5;
+
+	int n = 20; //number of points in a line in the grid
+	makeMasses_Indices(sizeGrid/((double) n));
+
+	windVelocity = vec3(10, 10, 0);
+
 }
 
 void WindScene::makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2)
 {
 
-	windVelocity = vec3(5,5,0);
-
-	double x_r0 = 0.9 * length(aMass->getPosition() - aMass2->getPosition());
 
 
-	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 1000.0f, x_r0, 0.0f, aMass, aMass2);
+	double x_r0 = 1.2 * length(aMass->getPosition() - aMass2->getPosition());
+
+
+	PhysicsSpring* spring0 = new PhysicsSpring(aMass->getPosition(), 2000.0f, x_r0, 0.0f, aMass, aMass2);
 	springs.push_back(spring0);
+}
+
+void WindScene::makeMasses_Indices(float distance)
+{
+	for (int i = 0; i < masses.size(); i++)
+	{
+		PhysicsMass* mass_i = masses.at(i);
+		for (int j = (i + 1); (j < masses.size() && (j > i)); j++)
+		{
+			PhysicsMass* mass_j = masses.at(j);
+
+			float d  = length((mass_i)->getPosition() - mass_j->getPosition());
+
+			if (d <= (distance + 0.001))
+			{
+				//printf("Added a mass to the indicies \n");
+
+
+				for (int k = (i + 1); (k < masses.size() && (k > i) ); k++)
+				{
+					PhysicsMass* mass_k = masses.at(k);
+
+					float d_1 = length(mass_i->getPosition() - mass_k->getPosition());
+					float d_2 = length(mass_k->getPosition() - mass_j->getPosition());
+
+					if (d_1 < (distance + 0.001) && j!= k)
+					{
+
+						masses_Indices.push_back(i);
+						masses_Indices.push_back(j);
+						masses_Indices.push_back(k);
+					} else if (d_2 < (distance + 0.001) && j!=k)
+					{
+						masses_Indices.push_back(i);
+						masses_Indices.push_back(j);
+						masses_Indices.push_back(k);
+					}
+
+				}
+
+			}
+		}
+
+
+			/*
+			for (int k = 0; (k < masses.size() && ( k > i && j > i)); k++)
+			{
+				PhysicsMass* mass_k = masses.at(k);
+
+				float distance_hyp = sqrt( pow(distance, 2) + pow(distance, 2));
+
+				float i_j_distance = length(mass_i->getPosition() - mass_j->getPosition());
+				float i_k_distance = length(mass_i->getPosition() - mass_k->getPosition());
+				float j_k_distance = length(mass_j->getPosition() - mass_k->getPosition());
+
+				if ( (i_j_distance <= (distance + 0.01)))
+				{
+					printf("Added a mass to the indicies \n");
+					masses_Indices.push_back(i);
+					masses_Indices.push_back(j);
+					masses_Indices.push_back(k);
+				}
+			}
+			*/
+		}
+
+}
+
+
+//This method will use the location of the vertices
+// of a triangle to get the area of it
+float WindScene::calculateAreaOfTriangle(vec3 tri1, vec3 tri2, vec3 tri3)
+{
+	vec3 AB = (tri2 - tri1);
+	vec3 AC = (tri3 - tri1);
+
+
+	float area = 0.5 * length(cross(AB, AC));
+	return area;
 }
 
 void WindScene::makeGrid()
@@ -113,11 +199,27 @@ WindScene::~WindScene() {
 
 vector<vec3> WindScene::getGeometry()
 {
+
+
 	vector<vec3> verts;
+
+	/*
+	 *
+	 * Old algorthm
 	for (PhysicsSpring* spring:springs)
 	{
 		verts.push_back(spring->getMassA_Location());
 		verts.push_back(spring->getMassB_Location());
+
+	}*/
+
+	//new algorithm
+
+	for (int i = 0 ; i < masses_Indices.size(); i+=3)
+	{
+		verts.push_back(masses.at(masses_Indices.at(i    ))->getPosition());
+		verts.push_back(masses.at(masses_Indices.at(i + 1))->getPosition());
+		verts.push_back(masses.at(masses_Indices.at(i + 2))->getPosition());
 
 	}
 
@@ -132,7 +234,7 @@ void WindScene::applyTimeStep(float delta_time)
 
 	float alpha = 0.6f;
 	float gravity = -9.8196f;
-	float dampeningFactor = 1.2f;
+	float dampeningFactor = 0.6f;
 	vec3 p = vec3(0.2, 0.2, 0.2); //density
 	float area = (0.5f) * (0.5f);
 
@@ -154,6 +256,7 @@ void WindScene::applyTimeStep(float delta_time)
 
 		//This is the difference between the mass velocity and the wind velocity
 
+		/* Old code to make the windForce
 
 		vec3 v_t = mass->getVelocity() - windVelocity;
 
@@ -161,7 +264,7 @@ void WindScene::applyTimeStep(float delta_time)
 		vec3 wind_Force = (float) (6.0f * M_PI_1 * viscosity * radius)  * v_t;
 		//mass->applyForce(v_t * alpha);
 		mass->applyForce(windForce);
-
+		*/
 		//apply damping
 
 		vec3 dampeningForce =  -dampeningFactor * mass->getVelocity();
@@ -171,6 +274,37 @@ void WindScene::applyTimeStep(float delta_time)
 
 	}
 
+
+	for (int i = 0; i < masses_Indices.size(); i+=3)
+	{
+		PhysicsMass* mass0 = masses.at(masses_Indices.at(i    ));
+		PhysicsMass* mass1 = masses.at(masses_Indices.at(i + 1));
+		PhysicsMass* mass2 = masses.at(masses_Indices.at(i + 2));
+
+		//we need the area of this triangle
+		float area = calculateAreaOfTriangle(mass0->getPosition(),mass1->getPosition(), mass2->getPosition());
+
+		vec3 v0 = mass0->getVelocity();
+		vec3 v1 = mass1->getVelocity();
+		vec3 v2 = mass2->getVelocity();
+
+		vec3 avgVel = (1/3.0f) * (v0 + v1 + v2);
+
+		vec3 v_n = avgVel - windVelocity;
+
+		vec3 p = vec3(0.8, 0.8, 0.8);
+
+		float alpha = 0.5;	//We will only have forces facing the wind (Assumption)
+
+		vec3 forceVec = (area) * (windVelocity * windVelocity) * p;
+
+		mass0->applyForce(forceVec);
+		mass1->applyForce(forceVec);
+		mass2->applyForce(forceVec);
+
+
+
+	}
 	//iterate through springs applying spring force where need
 
 	for (PhysicsSpring* s : springs)
