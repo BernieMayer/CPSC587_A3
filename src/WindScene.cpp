@@ -16,6 +16,8 @@ WindScene::WindScene() {
 void WindScene::makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2)
 {
 
+	windVelocity = vec3(5,5,0);
+
 	double x_r0 = 0.9 * length(aMass->getPosition() - aMass2->getPosition());
 
 
@@ -111,11 +113,76 @@ WindScene::~WindScene() {
 
 vector<vec3> WindScene::getGeometry()
 {
+	vector<vec3> verts;
+	for (PhysicsSpring* spring:springs)
+	{
+		verts.push_back(spring->getMassA_Location());
+		verts.push_back(spring->getMassB_Location());
+
+	}
+
+
+	return verts;
 
 }
 
 void WindScene::applyTimeStep(float delta_time)
 {
 
+
+	float alpha = 0.6f;
+	float gravity = -9.8196f;
+	float dampeningFactor = 1.2f;
+	vec3 p = vec3(0.2, 0.2, 0.2); //density
+	float area = (0.5f) * (0.5f);
+
+	float viscosity = 0.1;
+	float radius = 0.01;
+//zero out all the forces on the masses
+	for (PhysicsMass* mass:masses)
+	{
+		mass->zeroOutForce();
+	}
+
+	vec3 windForce = p * area * (windVelocity * windVelocity);
+
+	for (PhysicsMass* mass:masses)
+	{
+		//apply gravity
+
+		mass->applyForce(mass->getMass() * vec3(0, gravity, 0));
+
+		//This is the difference between the mass velocity and the wind velocity
+
+
+		vec3 v_t = mass->getVelocity() - windVelocity;
+
+
+		vec3 wind_Force = (float) (6.0f * M_PI_1 * viscosity * radius)  * v_t;
+		//mass->applyForce(v_t * alpha);
+		mass->applyForce(windForce);
+
+		//apply damping
+
+		vec3 dampeningForce =  -dampeningFactor * mass->getVelocity();
+		mass->applyForce(dampeningForce);
+
+
+
+	}
+
+	//iterate through springs applying spring force where need
+
+	for (PhysicsSpring* s : springs)
+	{
+		s->applyForce();
+	}
+
+
+	//Change the velocites and the positions of the masses
+	for (PhysicsMass* mass:masses)
+	{
+		mass->resolveForces((float) delta_time);
+	}
 
 }

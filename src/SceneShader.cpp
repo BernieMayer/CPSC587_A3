@@ -154,6 +154,18 @@ void SceneShader::switchScene(SceneType type)
 			springColors.push_back(glm::vec3(1.0,0.0,0.0));
 		}
 		scene_Type = SceneType::CLOTH_SCENE;
+	} else if (type == SceneType::WIND_SCENE)
+	{
+		delete scene;
+		scene = new WindScene();
+
+		springLine = scene->getGeometry();
+
+		for (auto a: springLine)
+		{
+			springColors.push_back(glm::vec3(1.0, 0.0, 0.0));
+		}
+		scene_Type = SceneType::WIND_SCENE;
 	}
 
 

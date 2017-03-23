@@ -18,6 +18,7 @@
 #include "PendulumScene.h"
 #include "JellyScene.h"
 #include "ClothScene.h"
+#include "WindScene.h"
 #include "Scene.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>

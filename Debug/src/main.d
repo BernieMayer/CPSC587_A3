@@ -7,7 +7,7 @@ src/main.o: ../src/main.cpp ../src/Scene.h ../src/SceneShader.h \
  /home/ugd/bemayer/CPSC587/A3/libraries/trimesh/include/Color.h \
  ../src/MassSpringScene.h ../src/PhysicsSpring.h ../src/PhysicsObject.h \
  ../src/PhysicsMass.h ../src/PendulumScene.h ../src/JellyScene.h \
- ../src/ClothScene.h
+ ../src/ClothScene.h ../src/WindScene.h
 
 ../src/Scene.h:
 
@@ -38,3 +38,5 @@ src/main.o: ../src/main.cpp ../src/Scene.h ../src/SceneShader.h \
 ../src/JellyScene.h:
 
 ../src/ClothScene.h:
+
+../src/WindScene.h:

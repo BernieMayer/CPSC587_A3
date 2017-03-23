@@ -29,10 +29,12 @@ public:
 	void applyTimeStep(float delta_time);
 
 private:
+	vec3 windVelocity;
 	void makeSpring(PhysicsMass* aMass, PhysicsMass* aMass2);
 	void makeGrid();
 	vector<PhysicsMass*> masses;
 	vector<PhysicsSpring*> springs;
+	const float M_PI_1 = 3.14159265358979323846;
 };
 
 #endif /* WINDSCENE_H_ */

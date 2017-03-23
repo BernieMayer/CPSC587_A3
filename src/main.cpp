@@ -64,7 +64,9 @@ void keyboard( unsigned char key, int x, int y )
 		break;
 	case(GLFW_KEY_4):
 			shader.switchScene(SceneType::CLOTH_SCENE);
-
+		break;
+	case(GLFW_KEY_5):
+			shader.switchScene(SceneType::WIND_SCENE);
 	default:
 		break;
 	}
